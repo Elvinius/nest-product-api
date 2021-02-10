@@ -8,7 +8,6 @@ import {
   ApiInternalServerErrorResponse,
 } from '@nestjs/swagger';
 import { ProductsService } from './products.service';
-import { Product } from './product.module';
 
 @ApiTags('products')
 @Controller('products')
@@ -19,50 +18,47 @@ export class ProductsController {
   @ApiOperation({ summary: 'Create product' })
   @ApiOkResponse({
     status: 201,
-    description: 'Added product successfully',
-    type: Product
+    description: 'Added product successfully'
   })
-  addProduct(
+  async addProduct(
     @Body('title') prodTitle: string,
     @Body('description') prodDesc,
     @Body('price') prodPrice: number) {
-    const generatedID = this.productsService.insertProduct(prodTitle, prodDesc, prodPrice);
+    const generatedID = await this.productsService.insertProduct(prodTitle, prodDesc, prodPrice);
     return { id: generatedID };
   }
   @Get()
-  retrieveAllProducts() {
-    return this.productsService.fetchProducts();
+  async retrieveAllProducts() {
+    const products = await this.productsService.fetchProducts();
+    return products;
   }
 
   @Get(':id')
   @ApiResponse({
     status: 200,
-    description: 'The found record',
-    type: Product,
+    description: 'The found record'
   })
   getProduct(@Param('id') prodId: string) {
-
     return this.productsService.fetchSingleProduct(prodId);
   }
 
   @Patch(':id')
   @ApiOkResponse({
     status: 200,
-    description: 'Patched product by ID successfully',
-    type: Product
+    description: 'Patched product by ID successfully'
   })
   @ApiNotFoundResponse({ description: 'No product found for ID' })
   @ApiInternalServerErrorResponse({
     description: 'Internal server error',
   })
-  updateProduct(@Param('id') prodId: string, @Body('title') prodTitle: string, @Body('description') prodDesc: string, @Body('price') prodPrice: number) {
-    this.productsService.updateProduct(prodId, prodTitle, prodDesc, prodPrice);
+  async updateProduct(@Param('id') prodId: string, @Body('title') prodTitle: string, @Body('description') prodDesc: string, @Body('price') prodPrice: number) {
+    await this.productsService.updateProduct(prodId, prodTitle, prodDesc, prodPrice);
     return null;
   }
 
   @Delete(':id')
-  deleteProduct(@Param('id') prodId: string) {
-    this.productsService.deleteProduct(prodId);
+  async deleteProduct(@Param('id') prodId: string) {
+    await this.productsService.deleteProduct(prodId);
     return null;
   }
 }
