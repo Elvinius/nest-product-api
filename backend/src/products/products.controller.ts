@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Param, Delete, Patch } from '@nestjs/common';
+import { Controller, Get, Post, Body, Param, Delete, Patch, ParseIntPipe } from '@nestjs/common';
 import {
   ApiOperation,
   ApiResponse,
@@ -23,7 +23,7 @@ export class ProductsController {
   async addProduct(
     @Body('title') prodTitle: string,
     @Body('description') prodDesc,
-    @Body('price') prodPrice: number) {
+    @Body('price', ParseIntPipe) prodPrice: number) {
     const generatedID = await this.productsService.insertProduct(prodTitle, prodDesc, prodPrice);
     return { id: generatedID };
   }
@@ -51,7 +51,7 @@ export class ProductsController {
   @ApiInternalServerErrorResponse({
     description: 'Internal server error',
   })
-  async updateProduct(@Param('id') prodId: string, @Body('title') prodTitle: string, @Body('description') prodDesc: string, @Body('price') prodPrice: number) {
+  async updateProduct(@Param('id') prodId: string, @Body('title') prodTitle: string, @Body('description') prodDesc: string, @Body('price', ParseIntPipe) prodPrice: number) {
     await this.productsService.updateProduct(prodId, prodTitle, prodDesc, prodPrice);
     return null;
   }

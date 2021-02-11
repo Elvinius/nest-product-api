@@ -2,6 +2,7 @@ import { Injectable, NotFoundException } from '@nestjs/common';
 import { Product } from './product.model';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
+
 @Injectable()
 export class ProductsService {
 
@@ -16,6 +17,7 @@ export class ProductsService {
       description: desc,
       price
     });
+
     const result = await newProduct.save();
     return result.id as string;
   }
@@ -38,6 +40,7 @@ export class ProductsService {
     if (desc) {
       updatedProduct.description = desc;
     }
+
     if (price) {
       updatedProduct.price = price;
     }
