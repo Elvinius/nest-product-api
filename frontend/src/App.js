@@ -1,7 +1,9 @@
 import React, { Component } from "react";
+import ProductTable from './ProductTable';
+import AddTitle from './AddTitle';
 import axios from 'axios';
 import { AvForm, AvField } from 'availity-reactstrap-validation';
-import { Table, Button, Modal, ModalBody, ModalHeader, ModalFooter, Label } from 'reactstrap';
+import { Button, Modal, ModalBody, ModalHeader, ModalFooter, Label } from 'reactstrap';
 
 class App extends Component {
   //initial state details
@@ -102,7 +104,6 @@ class App extends Component {
   }
 
   render() {
-    console.log("render() method");
     // to map products and render them inside the table
     let products = this.state.products.map((product) => {
       return (
@@ -126,14 +127,11 @@ class App extends Component {
           <Modal isOpen={this.state.newProductModal} toggle={this.toggleNewProductModal.bind(this)}>
             <ModalHeader toggle={this.toggleNewProductModal.bind(this)}>{this.state.error ? <span classtitle="alert alert-danger p-1" role="alert">{this.state.error}</span> : "Add a new Product"}</ModalHeader>
             <ModalBody>
-              <AvForm >
-                <Label for="title">Title</Label>
-                <AvField id="title" name="title" value={this.state.newProductData.title} required onChange={(e) => {
-                  let { newProductData } = this.state;
-                  newProductData.title = e.target.value;
-                  this.setState({ newProductData, error: '' });
-                }} />
-              </AvForm>
+              <AddTitle value={this.state.newProductData.title} onChange={(e) => {
+                let { newProductData } = this.state;
+                newProductData.title = e.target.value;
+                this.setState({ newProductData, error: '' });
+              }} />
               <AvForm>
                 <Label for="description">Description</Label>
                 <AvField id="description" name="description" value={this.state.newProductData.description} required onChange={(e) => {
@@ -190,19 +188,7 @@ class App extends Component {
               <Button color="secondary" onClick={this.toggleEditProductModal.bind(this)}>Cancel</Button>
             </ModalFooter>
           </Modal>
-          <Table>
-            <thead>
-              <tr>
-                <th>Title</th>
-                <th>Description</th>
-                <th>Price</th>
-                <th>Actions</th>
-              </tr>
-            </thead>
-            <tbody>
-              {products}
-            </tbody>
-          </Table>
+          <ProductTable products={products} />
         </div>
       </div>
     );

@@ -32,7 +32,6 @@ export class ProductsController {
     const products = await this.productsService.fetchProducts();
     return products;
   }
-
   @Get(':id')
   @ApiResponse({
     status: 200,
